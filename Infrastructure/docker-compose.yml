@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+
+  # USER SERVICE DATABASE
+  postgres-user:
+    image: postgres:15
+    container_name: postgres-user
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: userdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - userdb_data:/var/lib/postgresql/data
+    networks:
+      - corewallet-net
+
+  # WALLET SERVICE DATABASE
+  postgres-wallet:
+    image: postgres:15
+    container_name: postgres-wallet
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: walletdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - walletdb_data:/var/lib/postgresql/data
+    networks:
+      - corewallet-net
+
+  # RABBITMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - corewallet-net
+
+  # KEYCLOAK
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    networks:
+      - corewallet-net
+
+  # PGADMIN
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@corewallet.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - corewallet-net
+
+  # MOCK KYC SERVICE
+  mock-kyc:
+    image: mockserver/mockserver
+    container_name: mock-kyc
+    ports:
+      - "1080:1080"
+    networks:
+      - corewallet-net
+
+  # MOCK BANK SERVICE
+  mock-bank:
+    image: mockserver/mockserver
+    container_name: mock-bank
+    ports:
+      - "1081:1080"
+    networks:
+      - corewallet-net
+
+  # ELASTICSEARCH
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - corewallet-net
+
+  # KIBANA
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - corewallet-net
+  
+  # JAEGER        
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4317:4317"    # OTLP gRPC
+      - "4318:4318"    # OTLP HTTP
+    networks:
+      - corewallet-net
+
+volumes:
+  userdb_data:
+  walletdb_data:
+
+networks:
+  corewallet-net:
+    driver: bridge

@@ -1,0 +1,21 @@
+# 👇 Common folders and build artifacts
+bin/
+obj/
+.vscode/
+*.user
+*.suo
+
+# 👇 Rider/VS Code IDE metadata
+.idea/
+*.csproj.user
+
+# 👇 Secrets / configs
+appsettings.json
+appsettings.*.json
+
+# 👇 EF Core files (optional)
+Migrations/
+
+# 👇 Docker ignores
+docker-compose.override.yml
+.env
