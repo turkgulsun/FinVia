@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using WalletService.Application.Abstractions;
+using WalletService.Domain.Abstractions;
 using WalletService.Domain.Entities;
 using WalletService.Infrastructure.Persistence;
 
-namespace WalletService.Infrastructure.Services;
+namespace WalletService.Infrastructure.Repositories;
 
-public class WalletService(WalletDbContext context) : IWalletService
+public class WalletRepository(WalletDbContext context) : IWalletRepository
 {
     public async Task<Wallet?> GetByIdAsync(Guid walletId)
     {

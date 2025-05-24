@@ -1,8 +1,8 @@
 using WalletService.Domain.Entities;
 
-namespace WalletService.Application.Abstractions;
+namespace WalletService.Domain.Abstractions;
 
-public interface IWalletService
+public interface IWalletRepository
 {
     Task<Wallet?> GetByIdAsync(Guid walletId);
     Task<Wallet?> GetByUserIdAsync(Guid userId);

@@ -1,8 +1,8 @@
 using UserService.Domain.Entities;
 
-namespace UserService.Application.Abstractions;
+namespace UserService.Domain.Abstractions;
 
-public interface IUserService
+public interface IUserRepository
 {
     Task AddAsync(User user);
     Task<User?> GetByEmailAsync(string email);

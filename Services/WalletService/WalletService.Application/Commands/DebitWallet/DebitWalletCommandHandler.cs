@@ -1,15 +1,15 @@
 using Finvia.Shared.Common;
 using MediatR;
-using WalletService.Application.Abstractions;
+using WalletService.Domain.Abstractions;
 using WalletService.Domain.Messages;
 
 namespace WalletService.Application.Commands.DebitWallet;
 
-public class DebitWalletCommandHandler(IWalletService walletService) : IRequestHandler<DebitWalletCommand, Result<Guid>>
+public class DebitWalletCommandHandler(IWalletRepository walletRepository) : IRequestHandler<DebitWalletCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(DebitWalletCommand command, CancellationToken cancellationToken)
     {
-        var wallet = await walletService.GetByIdAsync(command.WalletId);
+        var wallet = await walletRepository.GetByIdAsync(command.WalletId);
 
         if (wallet is null)
             return Result<Guid>.Failure(WalletMessages.NotFound);
@@ -22,7 +22,7 @@ public class DebitWalletCommandHandler(IWalletService walletService) : IRequestH
 
         wallet.Debit(command.Amount);
 
-        await walletService.SaveAsync(wallet);
+        await walletRepository.SaveAsync(wallet);
 
         return Result<Guid>.Success(wallet.Id.Value);
     }

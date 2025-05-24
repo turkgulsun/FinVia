@@ -2,9 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using UserService.Application.Abstractions;
 using UserService.Infrastructure.Persistence;
-using UserService.Infrastructure.Services;
 using OpenTelemetry.Resources; 
 using OpenTelemetry.Trace;
 using OpenTelemetry.Exporter;
@@ -12,6 +10,8 @@ using UserService.API.Middlewares;
 using Serilog.Enrichers.Span;
 using UserService.API.Validators;
 using UserService.Application.Commands.RegisterUser;
+using UserService.Domain.Abstractions;
+using UserService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +29,7 @@ var connectionString = builder.Configuration.GetConnectionString("UserDb");
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddScoped<IUserService, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommandHandler).Assembly));
