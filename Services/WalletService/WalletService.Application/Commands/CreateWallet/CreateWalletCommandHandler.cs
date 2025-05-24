@@ -1,13 +1,13 @@
 using Finvia.Shared.Common;
 using MediatR;
-using WalletService.Application.Abstractions;
+using WalletService.Domain.Abstractions;
 using WalletService.Domain.Entities;
 using WalletService.Domain.Enums;
 using WalletService.Domain.Messages;
 
 namespace WalletService.Application.Commands.CreateWallet;
 
-public class CreateWalletCommandHandler(IWalletService walletService) : IRequestHandler<CreateWalletCommand, Result<Guid>>
+public class CreateWalletCommandHandler(IWalletRepository walletRepository) : IRequestHandler<CreateWalletCommand, Result<Guid>>
 {
 
     public async Task<Result<Guid>> Handle(CreateWalletCommand command, CancellationToken cancellationToken)
@@ -17,7 +17,7 @@ public class CreateWalletCommandHandler(IWalletService walletService) : IRequest
 
         var wallet = new Wallet(command.UserId, currency);
 
-        await walletService.SaveAsync(wallet);
+        await walletRepository.SaveAsync(wallet);
 
         return Result<Guid>.Success(wallet.Id.Value, WalletMessages.WalletCreated);
     }

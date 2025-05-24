@@ -1,17 +1,17 @@
 using Finvia.Shared.Common;
 using Mapster;
 using MediatR;
-using WalletService.Application.Abstractions;
 using WalletService.Application.DTOs;
+using WalletService.Domain.Abstractions;
 using WalletService.Domain.Messages;
 
 namespace WalletService.Application.Queries.GetWalletByUserId;
 
-public class GetWalletByUserIdQueryHandler(IWalletService walletService) : IRequestHandler<GetWalletByUserIdQuery, Result<WalletDto>>
+public class GetWalletByUserIdQueryHandler(IWalletRepository walletRepository) : IRequestHandler<GetWalletByUserIdQuery, Result<WalletDto>>
 {
     public async Task<Result<WalletDto>> Handle(GetWalletByUserIdQuery query, CancellationToken cancellationToken)
     {
-        var wallet = await walletService.GetByUserIdAsync(query.UserId);
+        var wallet = await walletRepository.GetByUserIdAsync(query.UserId);
 
         if (wallet == null)
             return Result<WalletDto>.Failure(WalletMessages.NotFound);

@@ -2,7 +2,6 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Serilog;
 using WalletService.API.Validators;
-using WalletService.Application.Abstractions;
 using WalletService.Application.Commands.CreateWallet;
 using WalletService.Application.Mappings;
 using WalletService.Infrastructure.Persistence;
@@ -14,6 +13,8 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using WalletService.API.Middlewares;
 using Serilog.Enrichers.Span;
+using WalletService.Domain.Abstractions;
+using WalletService.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,7 +57,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<WalletDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("WalletDb")));
 
-builder.Services.AddScoped<IWalletService, WalletService.Infrastructure.Services.WalletService>();
+builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(CreateWalletCommandHandler).Assembly));

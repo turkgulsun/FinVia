@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using UserService.Application.Abstractions;
+using UserService.Domain.Abstractions;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Persistence;
 
-namespace UserService.Infrastructure.Services;
+namespace UserService.Infrastructure.Repositories;
 
-public class UserRepository(UserDbContext db) : IUserService
+public class UserRepository(UserDbContext db) : IUserRepository
 {
     public async Task AddAsync(User user)
     {
