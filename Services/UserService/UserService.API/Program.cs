@@ -1,3 +1,4 @@
+using Finvia.Shared.Middlewares;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,6 @@ using UserService.Infrastructure.Persistence;
 using OpenTelemetry.Resources; 
 using OpenTelemetry.Trace;
 using OpenTelemetry.Exporter;
-using UserService.API.Middlewares;
 using Serilog.Enrichers.Span;
 using UserService.API.Validators;
 using UserService.Application.Commands.RegisterUser;

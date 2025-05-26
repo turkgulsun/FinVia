@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Finvia.Shared.Outbox\Finvia.Shared.Outbox.csproj" />
       <ProjectReference Include="..\..\..\Shared\Finvia.Shared\Finvia.Shared.csproj" />
       <ProjectReference Include="..\KycService.Application\KycService.Application.csproj" />
     </ItemGroup>
