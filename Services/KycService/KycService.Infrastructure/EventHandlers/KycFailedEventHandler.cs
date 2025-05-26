@@ -1,24 +1,25 @@
-using KycService.Domain.Entities;
+using Finvia.Shared.IntegrationEvents.Kyc;
+using Finvia.Shared.Outbox.Abstractions;
+using KycService.Application.Abstractions;
 using KycService.Domain.Enums;
 using KycService.Domain.Events;
-using KycService.Infrastructure.Persistence;
 using MediatR;
 
 namespace KycService.Infrastructure.EventHandlers;
 
-public class KycFailedEventHandler(KycDbContext db) : INotificationHandler<KycFailedEvent>
+public class KycFailedEventHandler
+    (IKycAuditService audit, IIntegrationEventDispatcher eventDispatcher) : INotificationHandler<KycFailedEvent>
 {
     public async Task Handle(KycFailedEvent notification, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"[EVENT] ⚠️ KYC Failed for UserId: {notification.UserId} at {notification.OccurredOn}");
+        await audit.LogAsync(notification.UserId, KycStatus.Failed, "KYC failed.", cancellationToken);
 
-        var log = new KycAuditLog(
+        var integrationEvent = new KycFailedIntegrationEvent(
             notification.UserId,
-            KycStatus.Failed,
-            "KYC failed."
+            DateTime.UtcNow,
+            correlationId: Guid.NewGuid()
         );
 
-        db.AuditLogs.Add(log);
-        await db.SaveChangesAsync(cancellationToken);
+        await eventDispatcher.DispatchAsync(integrationEvent, cancellationToken);
     }
 }
