@@ -1,4 +1,4 @@
-namespace WalletService.Domain.Enums;
+namespace WalletService.Worker.Persistence.Enums;
 
 public enum Currency
 {

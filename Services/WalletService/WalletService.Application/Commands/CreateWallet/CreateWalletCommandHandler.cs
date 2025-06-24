@@ -19,6 +19,6 @@ public class CreateWalletCommandHandler(IWalletRepository walletRepository) : IR
 
         await walletRepository.SaveAsync(wallet);
 
-        return Result<Guid>.Success(wallet.Id.Value, WalletMessages.WalletCreated);
+        return Result<Guid>.Success(wallet.Id, WalletMessages.WalletCreated);
     }
 }
