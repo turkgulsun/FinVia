@@ -14,4 +14,24 @@ public class OutboxMessage
     public DateTime? FailedAt { get; set; }
     public int RetryCount { get; set; } = 0;
     public string? ErrorDetails { get; set; }
+    
+    public void MarkAsProcessed()
+    {
+        Status = OutboxStatus.Processed;
+        ProcessedAt = DateTime.UtcNow;
+    }
+
+    public void IncrementRetry()
+    {
+        RetryCount++;
+        if (RetryCount >= 5)
+        {
+            Status = OutboxStatus.DeadLetter;
+        }
+        else
+        {
+            Status = OutboxStatus.Retrying;
+        }
+        FailedAt = DateTime.UtcNow;
+    }
 }

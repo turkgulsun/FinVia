@@ -4,9 +4,8 @@ using WalletService.Domain.ValueObjects;
 
 namespace WalletService.Domain.Entities;
 
-public class Wallet : IAggregateRoot
+public class Wallet : Entity, IAggregateRoot
 {
-    public WalletId Id { get; private set; } = WalletId.Create();
     public Guid UserId { get; private set; }
     public Balance Balance { get; private set; }
     public Currency Currency { get; private set; }
@@ -17,7 +16,6 @@ public class Wallet : IAggregateRoot
 
     public Wallet(Guid userId, Currency currency)
     {
-        Id = WalletId.Create();
         UserId = userId;
         Currency = currency;
         CreatedAt = DateTime.UtcNow;

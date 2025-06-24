@@ -24,6 +24,6 @@ public class DebitWalletCommandHandler(IWalletRepository walletRepository) : IRe
 
         await walletRepository.SaveAsync(wallet);
 
-        return Result<Guid>.Success(wallet.Id.Value);
+        return Result<Guid>.Success(wallet.Id);
     }
 }

@@ -21,6 +21,6 @@ public class CreditWalletCommandHandler(IWalletRepository walletRepository) : IR
 
         await walletRepository.SaveAsync(wallet);
 
-        return Result<Guid>.Success(wallet.Id.Value);
+        return Result<Guid>.Success(wallet.Id);
     }
 }
